@@ -1,6 +1,8 @@
 FROM golang:alpine as builder
 WORKDIR /azcopy
 
+LABEL org.opencontainers.image.source https://github.com/mfinelli/docker-azcopy
+
 ARG AZCOPY_VERSION=10.9.0
 ENV AZCOPY_VERSION=$AZCOPY_VERSION
 
