@@ -1,0 +1,22 @@
+---
+name: Publish
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  main:
+    name: publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: docker/setup-qemu-action@v1
+      - uses: docker/setup-buildx-action@v1
+      - id: docker
+        uses: crazy-max/ghaction-docker-meta@v1
+        with:
+          images: mfinelli/azcopy
+      - id: image
+        run: echo "::set-output name=tag::$(sed 's|mfinelli/azcopy:v|mfinelli/azcopy:|' <<< "${{ steps.docker.outputs.tags }}")"
+      - run: echo ${{ steps.image.outputs.tag }}
