@@ -16,6 +16,7 @@ RUN \
 
 FROM alpine
 COPY entrypoint.sh /entrypoint.sh
+COPY --from=builder /azcopy/LICENSE /usr/share/azcopy
 COPY --from=builder /azcopy/azcopy /usr/local/bin
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["azcopy"]
