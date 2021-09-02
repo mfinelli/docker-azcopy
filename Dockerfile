@@ -1,7 +1,7 @@
 FROM golang:alpine as builder
 WORKDIR /azcopy
 
-ARG AZCOPY_VERSION=10.11.0
+ARG AZCOPY_VERSION=10.12.0
 ENV AZCOPY_VERSION=$AZCOPY_VERSION
 
 RUN \
@@ -9,7 +9,7 @@ RUN \
   curl -LO https://github.com/Azure/azure-storage-azcopy/archive/v${AZCOPY_VERSION}.tar.gz && \
   tar zxf v${AZCOPY_VERSION}.tar.gz --strip-components=1 && \
   go mod vendor && \
-  go build -o azcopy && \
+  go build -o azcopy -mod=readonly -ldflags="-s -w" && \
   ./azcopy --version
 
 FROM alpine
