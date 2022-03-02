@@ -8,7 +8,7 @@ on:
 jobs:
   main:
     name: release
-    runs-on: ubuntu-lates
+    runs-on: ubuntu-latest
     steps:
       - uses: ncipollo/release-action@v1
         with:
