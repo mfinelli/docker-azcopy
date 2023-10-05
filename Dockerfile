@@ -5,9 +5,11 @@ ARG AZCOPY_VERSION=10.21.0
 ENV AZCOPY_VERSION=$AZCOPY_VERSION
 
 RUN \
-  apk --no-cache add curl && \
+  apk --no-cache add curl patch && \
   curl -LO https://github.com/Azure/azure-storage-azcopy/archive/v${AZCOPY_VERSION}.tar.gz && \
+  curl -LO https://patch-diff.githubusercontent.com/raw/Azure/azure-storage-azcopy/pull/2393.patch && \
   tar zxf v${AZCOPY_VERSION}.tar.gz --strip-components=1 && \
+  patch -p1 -i 2393.patch && \
   go mod vendor && \
   go build -o azcopy -mod=readonly -ldflags="-s -w" && \
   ./azcopy --version
