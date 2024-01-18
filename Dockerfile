@@ -1,21 +1,27 @@
-FROM golang:alpine as builder
+FROM golang:alpine as source
 WORKDIR /azcopy
 
 ARG AZCOPY_VERSION=10.21.2
 ENV AZCOPY_VERSION=$AZCOPY_VERSION
+ENV AZCOPY_URLBASE=https://github.com/Azure/azure-storage-azcopy
 
 RUN \
   apk --no-cache add curl patch && \
-  curl -LO https://github.com/Azure/azure-storage-azcopy/archive/v${AZCOPY_VERSION}.tar.gz && \
+  curl -LO ${AZCOPY_URLBASE}/archive/v${AZCOPY_VERSION}.tar.gz && \
   tar zxf v${AZCOPY_VERSION}.tar.gz --strip-components=1 && \
-  go mod vendor && \
+  rm v${AZCOPY_VERSION}.tar.gz && \
+  go mod vendor
+
+FROM source as builder
+
+RUN \
   go build -o azcopy -mod=readonly -ldflags="-s -w" && \
   ./azcopy --version
 
 FROM alpine
 LABEL org.opencontainers.image.source https://github.com/mfinelli/docker-azcopy
 COPY entrypoint.sh /entrypoint.sh
-COPY --from=builder /azcopy/LICENSE /usr/share/azcopy
+COPY --from=source /azcopy/ /usr/src/azcopy
 COPY --from=builder /azcopy/azcopy /usr/local/bin
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["azcopy"]
