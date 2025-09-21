@@ -1,4 +1,4 @@
-FROM golang:alpine as source
+FROM golang:alpine AS source
 WORKDIR /azcopy
 
 ARG AZCOPY_VERSION=10.30.0
@@ -12,7 +12,7 @@ RUN \
   rm v${AZCOPY_VERSION}.tar.gz && \
   go mod vendor
 
-FROM source as builder
+FROM source AS builder
 
 RUN \
   go build -o azcopy -mod=readonly -ldflags="-s -w" && \
