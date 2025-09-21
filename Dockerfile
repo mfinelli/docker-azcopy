@@ -1,7 +1,7 @@
 FROM golang:alpine AS source
 WORKDIR /azcopy
 
-ARG AZCOPY_VERSION=10.30.0
+ARG AZCOPY_VERSION=10.30.1
 ENV AZCOPY_VERSION=$AZCOPY_VERSION
 ENV AZCOPY_URLBASE=https://github.com/Azure/azure-storage-azcopy
 
